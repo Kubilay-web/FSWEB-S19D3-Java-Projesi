@@ -29,55 +29,130 @@ Aşağıda istenilen sonuçlara ulaşabilmek için gerekli SQL sorgularını yaz
 
 	1) ÖRNEK SORU: Yazar tablosunu KEMAL UYUMAZ isimli yazarı ekleyin.
 	
+   
+      INSERT INTO yazar(yazarad) VALUES ('Kemal Uyumaz');
 
 	
 	2) Biyografi türünü tür tablosuna ekleyiniz.
+
+	INSERT INTO tur(turadi) VALUES ('Biyografi');
 	
 	
 	3) 10A sınıfı olan ÇAĞLAR ÜZÜMCÜ isimli erkek, sınıfı 9B olan LEYLA ALAGÖZ isimli kız ve sınıfı 11C olan Ayşe Bektaş isimli kız öğrencileri tek sorguda ekleyin. 
+
+	 INSERT INTO ogrenci (sinif, ograd, cinsiyet)
+      VALUES
+     ('10A', 'ÇAĞLAR ÜZÜMCÜ', 'Erkek'),
+     ('9B', 'LEYLA ALAGÖZ', 'Kız'),
+     ('11C', 'Ayşe Bektaş', 'Kız');
+
 	
 	
 	4) Öğrenci tablosundaki rastgele bir öğrenciyi yazarlar tablosuna yazar olarak ekleyiniz.
+
+
+	INSERT INTO yazar (yazarno, yazarad, yazarsoyad)
+      SELECT
+      (SELECT MAX(yazarno) + 1 FROM yazar), 
+      ograd,
+      ogrsoyad
+      FROM ogrenci
+      ORDER BY RAND()
+      LIMIT 1;
 	
 	
 	5) Öğrenci numarası 10 ile 30 arasındaki öğrencileri yazar olarak ekleyiniz.
+
+      INSERT INTO yazar(yazarno, yazarad, yazarsoyad)
+      SELECT
+        (SELECT MAX(yazarno) + 1 FROM yazar), 
+        ograd,
+        ogrsoyad
+      FROM ogrenci
+      WHERE ogrno BETWEEN 10 AND 30;
 	
 	
 	6) Nurettin Belek isimli yazarı ekleyip yazar numarasını yazdırınız.
 	(Not: Otomatik arttırmada son arttırılan değer @@IDENTITY değişkeni içinde tutulur.)
+
+
+          INSERT INTO yazar(yazarad, yazarsoyad)
+          VALUES ('Nurettin', 'Belek');
+          SELECT @@IDENTITY AS yazarno;
+
 	
 	
 	7) 10B sınıfındaki öğrenci numarası 3 olan öğrenciyi 10C sınıfına geçirin.
+
+
+	  UPDATE ogrenci
+      SET sinif = '10C'
+      WHERE ogrno= 3;
+      SELECT* from ogrenci;
 	
 	
 	8) 9A sınıfındaki tüm öğrencileri 10A sınıfına aktarın
-	
+
+	UPDATE ogrenci
+    SET sinif = '10A'
+    WHERE sinif = '9A'; 
+
 	
 	9) Tüm öğrencilerin puanını 5 puan arttırın.
+
+	UPDATE ogrenci
+    SET puan = puan + 5;
 	
 	
 	10) 25 numaralı yazarı silin.
 
+	DELETE FROM yazar
+    WHERE yazarno= 25;
+
 
 	11) Doğum tarihi null olan öğrencileri listeleyin. (insert sorgusu ile girilen 3 öğrenci listelenecektir)
+
+	SELECT * FROM ogrenci
+    WHERE dtarih IS NULL;
 	
 	
 	12) Doğum tarihi null olan öğrencileri silin. 
+
+	DELETE FROM ogrenci
+    WHERE dtarih IS NULL;
 	
 	
 	13) Kitap tablosunda adı a ile başlayan kitapların puanlarını 2 artırın.
+
+	 UPDATE kitap
+     SET puan = puan + 2
+     WHERE kitapadi LIKE 'A%';
 	
 	
 	14) Kişisel Gelişim isimli bir tür oluşturun.
+
+	 INSERT INTO tur (turadi)
+     VALUES ('Kişisel Gelişim');
 	
 	
 	15) Kitap tablosundaki Başarı Rehberi kitabının türünü bu tür ile değiştirin.
+
+	 UPDATE kitap
+     SET turno = (SELECT turno FROM tur WHERE turadi = 'Kişisel Gelişim')
+     WHERE kitapadi = 'Başarı Rehberi';
 	
 	
 	16) Öğrenci tablosunu kontrol etmek amaçlı tüm öğrencileri görüntüleyen "ogrencilistesi" adında bir prosedür oluşturun.
-	
+
+     
+
+
 	
 	17) Öğrenci tablosuna yeni öğrenci eklemek için "ekle" adında bir prosedür oluşturun.
+
+
+    
+
 	
 	
 	18) Öğrenci noya göre öğrenci silebilmeyi sağlayan "sil" adında bir prosedür oluşturun.
